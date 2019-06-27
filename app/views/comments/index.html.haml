@@ -1,0 +1,28 @@
+%center
+
+  %h1 Comments for Photo #{@photo.title}
+.col
+  = link_to 'Back' , user_path(current_user), class: "btn btn-primary "
+
+
+.row.md-2
+  -@photo.commentings.order(created_at: :desc).each do |c|
+    = "User:"
+    %strong= " #{User.find(c.user_id).email}"
+    = "wrote for photo #{@photo.title}:"
+    .well.md-2.content
+      %strong
+        = c.content   
+      %br
+      = "at #{c.created_at.strftime("%c")}"
+      - if current_user.id == c.user_id or current_user == @photo.user
+        =button_to 'Delete Comment', comment_path(c.id), :method => :delete, class:"btn btn-danger", :data =>{:confirm => 'Are you sure?'}
+ 
+.row-md-4
+  - @user =current_user 
+  =form_tag user_photo_comments_path(@user,@photo), :method => :post do
+    = label :comment, :content, 'Comment'
+    = text_area :comment, :content
+    = submit_tag 'Add Comment'
+
+

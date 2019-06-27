@@ -1,0 +1,59 @@
+.row.top_row
+  .col-sm-6.user_att
+    %h2= @user.email
+    - if @user.avatar_file_name
+      = image_tag @user.avatar.url(:thumb)
+    %form.button_to{action: users_path(current_user), method: "All Users"}
+      %button{type: "submit"}
+        %strong= 'All Users'
+  .col-sm-6
+    = link_to 'Logout', log_out_path, class: ['btn', 'btn-danger', 'logout_btn']
+  .row
+    = link_to 'Add Photo', new_user_photo_path(@user), class: ['btn', 'btn-success', 'add_photo_btn']
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+
+%main
+
+  %center
+    %h1= "#{@user.email}'s PhotoShare Wall" 
+    %h2#caption=  "#{@user.email} pictures" 
+    - list =@user.photos.sort.reverse
+    - if list.any?
+      %img#slide{alt: "",  src: list.first.image.url(:medium),href: user_photo_comments_path(@user, list.first) }
+        #slides
+          -list.each do |p|
+            %img{alt: p.title ,  src: p.image.url(:medium),href: user_photo_comments_path(@user, p) }
+      
+    - if @user.following.any?
+      - @user.following.each do |user|
+        - if user.photos.any?
+          %h2#caption=  "#{user.email} pictures" 
+          - aList = user.photos.sort.reverse
+          - if aList.any?
+            %img#slide{alt: "",  src: aList.first.image.url(:medium) ,href: user_photo_comments_path(user, aList.first) }
+            #slides
+              - aList.each do |p|
+                %img{alt: p.title, src: p.image.url(:medium),href: user_photo_comments_path(user,p ) }
+
+        - else 
+          %h3= "#{user.email} has no pictures added"
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
+  %br/ 
